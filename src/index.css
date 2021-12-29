@@ -1,0 +1,27 @@
+.grid {
+  max-width: 600px;
+  font-size: 3rem;
+}
+
+.column {
+  position: relative;
+  float: left;
+  width: 33.33%;
+  height: 0;
+  padding-bottom: 33.33%;
+}
+
+.column-inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[class^="vws-buffer"] {
+  clear: left;
+}
