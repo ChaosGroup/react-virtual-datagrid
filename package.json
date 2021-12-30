@@ -1,7 +1,6 @@
 {
-  "name": "react-virtual-datagrid",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@chaosgroup/react-virtual-datagrid",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "license": "MIT",
