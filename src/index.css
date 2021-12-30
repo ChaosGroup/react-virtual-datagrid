@@ -9,6 +9,7 @@
   width: 33.33%;
   height: 0;
   padding-bottom: 33.33%;
+  outline: 1px solid;
 }
 
 .column-inner {

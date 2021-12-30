@@ -52,6 +52,10 @@ const propTypes = {
   columns: PropTypes.number.isRequired,
   requestMore: PropTypes.func.isRequired,
   children: PropTypes.func.isRequired,
+  itemHeight: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   bucketSizeVh: PropTypes.number,
   bufferSizeVh: PropTypes.number,
   intersectionMargin: PropTypes.string,
@@ -63,11 +67,14 @@ const VirtualDatagridImpure = ({
   columns,
   requestMore,
   children: render,
+  itemHeight = '100%',
   bucketSizeVh = 2, // The bucket will be N times viewport height big
   bufferSizeVh = 4, // The buffer will be N times viewport height big
   intersectionMargin = '40%',
   scrollableParent = null,
 }) => {
+  const isItemHeightFixed = typeof itemHeight === 'number';
+
   // Polyfill for IntersectionObserver
   // const [hasIO, setHasIO] = useState(!!window.IntersectionObserver);
   const [state, setState] = useState({ BUFFER_SIZE: 0 });
@@ -82,8 +89,11 @@ const VirtualDatagridImpure = ({
   const initBucketAndBufferSizes = useCallback(
     (newState = {}) => {
       const ROWS_PER_SCREEN = Math.round(
-        window.innerHeight /
-        (topBufferRef.current.offsetWidth / columns)
+        window.innerHeight / (
+          isItemHeightFixed
+            ? itemHeight
+            : (topBufferRef.current.offsetWidth / columns) * (parseFloat(itemHeight) / 100)
+        )
       );
       const VIEWPORT_SIZE = ROWS_PER_SCREEN * columns;
       const BUCKET_SIZE = VIEWPORT_SIZE * bucketSizeVh;
@@ -104,7 +114,14 @@ const VirtualDatagridImpure = ({
         BUFFER_SIZE,
       });
     },
-    [columns, state, bucketSizeVh, bufferSizeVh]
+    [
+      columns,
+      state,
+      bucketSizeVh,
+      bufferSizeVh,
+      itemHeight,
+      isItemHeightFixed,
+    ]
   );
 
   const timerRef = useRef();
@@ -250,7 +267,17 @@ const VirtualDatagridImpure = ({
     requestMore,
     scrollableParent,
     topPosition,
+    columns,
+    requestMoreOptimized,
   ]);
+
+  const topBufferFactor = Math.ceil(topPosition / columns);
+  const bottomBufferFactor = Math.ceil(
+    Math.max(
+      0,
+      data.length - topPosition - BUFFER_SIZE
+    ) / columns
+  );
 
   return (
     <>
@@ -260,8 +287,9 @@ const VirtualDatagridImpure = ({
         style={{
           width: '100%',
           paddingBottom:
-            (Math.ceil(topPosition / columns) / columns) * 100 +
-            '%',
+            isItemHeightFixed
+              ? topBufferFactor * itemHeight + 'px'
+              : (topBufferFactor / columns) * parseFloat(itemHeight) + '%',
         }}
       />
       {render(data.slice(topPosition, topPosition + BUFFER_SIZE))}
@@ -272,15 +300,12 @@ const VirtualDatagridImpure = ({
           width: '100%',
           paddingBottom:
             (data.length > BUFFER_SIZE
-              ? (Math.ceil(
-                Math.max(
-                  0,
-                  data.length - topPosition - BUFFER_SIZE
-                ) / columns
-              ) /
-                columns) *
-              100
-              : 0) + '%',
+              ? (
+                isItemHeightFixed
+                  ? bottomBufferFactor * itemHeight + 'px'
+                  : (bottomBufferFactor / columns) * 100 + '%'
+              )
+              : 0),
         }}
       />
     </>
