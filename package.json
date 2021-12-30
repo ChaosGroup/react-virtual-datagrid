@@ -4,6 +4,27 @@
   "private": true,
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChaosGroup/react-virtual-datagrid.git"
+  },
+  "keywords": [
+    "react",
+    "virtual",
+    "data",
+    "grid",
+    "list"
+  ],
+  "bugs": {
+    "url": "https://github.com/ChaosGroup/react-virtual-datagrid/issues"
+  },
+  "homepage": "https://github.com/ChaosGroup/react-virtual-datagrid#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@testing-library/jest-dom": "^5.16.1",
