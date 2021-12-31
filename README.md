@@ -18,7 +18,7 @@ Why you should choose React Virtual Datagrid over the many more out there?
 ### Installation
 
 ```bash
-npm i --save react-virtual-datagrid
+npm i --save @chaosgroup/react-virtual-datagrid
 ```
 
 ### Integration
